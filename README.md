@@ -4,3 +4,6 @@
 > Useful PySpark helpers functions and extensions core classes.
 
 ## Installation
+```sh
+> pip install pysparkly
+```
