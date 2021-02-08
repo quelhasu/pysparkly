@@ -3,6 +3,9 @@ name = "pysparkly"
 version = "0.1.0"
 description = "Pyspark useful functions and extensions"
 authors = ["ugo-quelhas <ugo.quelhas@edu.devinci.fr>"]
+packages = [
+    { include = "pysparkly" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.6"
