@@ -1,6 +1,29 @@
 from pydeco import add_method
 from pyspark.sql.dataframe import DataFrame
+from pyspark.sql import functions as F
+from pyspark.sql import types as T
 from pysparkly import parse_columns
+
+@add_method(DataFrame)
+def copy(self, input_cols, output_cols, udf=None, udf_args=None):
+    """
+    Copy columns in input_cols into output_cols with optional 
+    user-defined function.
+
+    :param DataFrame self:
+    :param list(str) input_cols: copied columns.
+    :param list(str) output_cols: returned columns.
+    """
+    columns = list(zip(input_cols, output_cols))
+    for in_col, out_col in columns:
+        if udf:
+            if udf_args:
+                self = self.withColumn(out_col, udf(in_col, udf_args))
+            else:
+                 self = self.withColumn(out_col, udf(in_col))
+        else:
+            self = self.withColumn(out_col, F.col(in_col))
+    return self
 
 @add_method(DataFrame)
 def select_columns(self, included_pattern=None, excluded_pattern=None, columns=None, dtypes=None):
