@@ -13,7 +13,6 @@ def order_columns(self, by_dtypes:bool=False):
             dtypes_dict.setdefault(dtype, list())
             dtypes_dict[dtype].append(col)
         dtypes_dict = dict(sorted(dtypes_dict.items()))
-        print(dtypes_dict)
         columns = [col for values in dtypes_dict.values() for col in sorted(values)]
         return self.select(columns)
         
