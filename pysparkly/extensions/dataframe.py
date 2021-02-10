@@ -4,6 +4,23 @@ from pyspark.sql import functions as F
 from pyspark.sql import types as T
 from pysparkly import parse_columns
 
+
+@add_method(DataFrame)
+def order_columns(self, by_dtypes:bool=False):
+    if by_dtypes:
+        dtypes_dict = dict()
+        for col, dtype in self.dtypes:
+            dtypes_dict.setdefault(dtype, list())
+            dtypes_dict[dtype].append(col)
+        dtypes_dict = dict(sorted(dtypes_dict.items()))
+        print(dtypes_dict)
+        columns = [col for values in dtypes_dict.values() for col in sorted(values)]
+        return self.select(columns)
+        
+    else:
+        return self.select(sorted(self.columns))
+
+
 @add_method(DataFrame)
 def copy(self, input_cols, output_cols, udf=None, udf_args=None):
     """

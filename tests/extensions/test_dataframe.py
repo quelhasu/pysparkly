@@ -9,6 +9,18 @@ from pysparkly.extensions import *
 def create_df(rows: list, spark: SparkSession):
     return spark.createDataFrame(rows)
 
+def test_dataframe_order_columns(spark: SparkSession):
+    dataframe = create_df([
+        Row(ab=1, bb="b", ba="c", aa=2, e=datetime.date(1987,1,1), f=1.2)
+    ], spark)
+    result = dataframe.order_columns()
+    expected_result = ["aa", "ab", "ba", "bb", "e", "f"]
+    assert expected_result == result.columns
+
+    result = dataframe.order_columns(by_dtypes=True)
+    expected_result = ["aa", "ab", "e", "f", "ba", "bb"]
+    assert expected_result == result.columns
+
 def test_dataframe_copy(spark: SparkSession):
     dataframe = create_df([
         Row(id=1, name="John", lastname="Doe", age=23, birthdate=datetime.date(1987,1,1))
