@@ -7,6 +7,29 @@ from typing import Callable, List
 
 
 @add_method(DataFrame)
+def with_columns(self: DataFrame, input_cols: List[str], func: Callable, output_cols: List[str] = None, udf_args: List[str] = None):
+    """
+    Apply an udf function to multiple columns
+
+    :param self:
+    :param input_cols: columns on which will be apply the function.
+    :param output_cols: returned columns.
+    :param func: function that will be apply on columns.
+    :param udf_args: udf's arguments.
+    """
+    df = self
+    output_cols = input_cols if output_cols is None else output_cols
+
+    if udf_args is None:
+        for input_col, output_col in zip(input_cols, output_cols):
+            df = df.withColumn(output_col, func(input_col))
+    else:
+        for input_col, output_col, args in zip(input_cols, output_cols, udf_args):
+            df = df.withColumn(output_col, func(input_col, args))
+    return df
+
+
+@add_method(DataFrame)
 def order_columns(self: DataFrame, by_dtypes: bool = False):
     """
     Rearrange the columns in alphabetical order. 
@@ -33,29 +56,18 @@ def order_columns(self: DataFrame, by_dtypes: bool = False):
 def copy(
     self: DataFrame,
     input_cols: List[str],
-    output_cols: List[str],
-    udf: Callable = None,
-    udf_args: List[str] = None
+    output_cols: List[str]
 ):
     """
-    Copy columns in input_cols into output_cols with optional 
-    user-defined function.
+    Copy columns in input_cols into output_cols.
 
     :param self:
     :param input_cols: copied columns
     :param output_cols: returned columns
-    :param func: udf function that will be apply on columns
-    :param udf_args: udf's arguments
     """
     columns = list(zip(input_cols, output_cols))
     for in_col, out_col in columns:
-        if udf:
-            if udf_args:
-                self = self.withColumn(out_col, udf(in_col, udf_args))
-            else:
-                self = self.withColumn(out_col, udf(in_col))
-        else:
-            self = self.withColumn(out_col, F.col(in_col))
+        self = self.withColumn(out_col, F.col(in_col))
     return self
 
 
