@@ -39,6 +39,10 @@ def test_dataframe_order_columns(spark: SparkSession):
     expected_result = ["aa", "ab", "ba", "bb", "e", "f"]
     assert expected_result == result.columns
 
+    result = dataframe.order_columns(order="desc")
+    expected_result = ["f", "e", "bb", "ba", "ab", "aa"]
+    assert expected_result == result.columns
+
     result = dataframe.order_columns(by_dtypes=True)
     expected_result = ["aa", "ab", "e", "f", "ba", "bb"]
     assert expected_result == result.columns

@@ -1,3 +1,8 @@
+"""
+~ helpers_dataframe.py
+
+Collection of functions to use over DataFrame.
+"""
 def parse_columns(df, included_pattern=None, excluded_pattern=None, columns=None, dtypes=None):
     """
     Get filtered set of columns from dataframe.

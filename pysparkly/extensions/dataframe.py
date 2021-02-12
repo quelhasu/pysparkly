@@ -30,7 +30,7 @@ def with_columns(self: DataFrame, input_cols: List[str], func: Callable, output_
 
 
 @add_method(DataFrame)
-def order_columns(self: DataFrame, by_dtypes: bool = False):
+def order_columns(self: DataFrame, order: str = "asc", by_dtypes: bool = False):
     """
     Rearrange the columns in alphabetical order. 
     An option of rearrangement by dtypes is possible.
@@ -38,6 +38,8 @@ def order_columns(self: DataFrame, by_dtypes: bool = False):
     :param self:
     :param by_dtypes: boolean to rearrange by dtypes first
     """
+    if order not in ['asc', 'desc']:
+        raise Exception("'{}' is not an acceptable ordering value, you can only use {'asc','desc'}".format(order))
     if by_dtypes:
         dtypes_dict = dict()
         for col, dtype in self.dtypes:
@@ -49,7 +51,7 @@ def order_columns(self: DataFrame, by_dtypes: bool = False):
         return self.select(columns)
 
     else:
-        return self.select(sorted(self.columns))
+        return self.select(sorted(self.columns, reverse=False if order == "asc" else True))
 
 
 @add_method(DataFrame)
