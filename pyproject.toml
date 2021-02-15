@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pysparkly"
-version = "0.1.0"
+version = "0.1.1"
 description = "Pyspark useful functions and extensions"
 authors = ["ugo-quelhas <ugo.quelhas@edu.devinci.fr>"]
 packages = [
